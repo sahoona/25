@@ -743,8 +743,8 @@ function gp_meta_after_title() {
     $author_display_name = get_the_author_meta('display_name', $post->post_author);
     $is_updated = get_the_modified_time('U') > get_the_time('U') + DAY_IN_SECONDS;
     $word_count = count(preg_split('/\s+/', trim(strip_tags($post->post_content)), -1, PREG_SPLIT_NO_EMPTY));
-    $reading_time = ceil($word_count / 225);
-    $reading_time = max(1, $reading_time); // Ensure at least 1 minute
+    $calculated_reading_time = ceil($word_count / 225);
+    $reading_time = max(1, $calculated_reading_time); // Ensure at least 1 minute
     ?>
     <div class="gp-meta-bar-after-title">
         <div class="posted-on-wrapper" title="<?php echo $is_updated ? 'Click to see publish date' : ''; ?>">
