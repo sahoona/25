@@ -1197,6 +1197,11 @@ html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
     box-sizing: border-box !important;
 }
 
+/* Reduce padding-top for site-content on single posts in mobile */
+body.single .site-content {
+    padding-top: 5px !important; /* Changed from 20px */
+}
+
 /* 2. 그 안의 모든 중간 컨테이너들의 패딩과 마진은 0으로 리셋하여 겹치지 않게 합니다. */
 #primary,
 main#main,
@@ -4022,7 +4027,7 @@ body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
 /* Step 3: Add margin-top to .entry-header on mobile */
 body.single .entry-header, .single .entry-header {
     /* Inherited from desktop: display:flex, flex-direction:column, align-items:flex-start, gap:15px, margin-bottom:25px */
-    margin-top: 20px !important; /* New explicit top margin for mobile */
+    margin-top: 5px !important; /* Changed from 20px */
     position: relative;          /* ADDED */
     z-index: 1;                  /* ADDED */
 }
