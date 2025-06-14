@@ -1696,6 +1696,18 @@ html.dark-mode-active #respond {
     border-top-color: var(--border-primary) !important;
 }
 
+.site-main article[class*="post-"] > .inside-article {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--border-primary) !important;
+    border-radius: 20px !important;
+    overflow: hidden !important; /* 내부 이미지가 삐져나오지 않도록 */
+}
+
+/* (2-A) 카드 하단 회색 경계선 제거 */
+body:not(.single) article.post .entry-footer {
+    display: none !important;
+}
+
 /* Home Screen Stars Hover Animation */
 .list-stars-wrapper {
     overflow: visible; /* 애니메이션이 잘리지 않도록 변경 */
@@ -2543,7 +2555,7 @@ html.dark-mode-active .gp-read-more-btn:hover {
 
 .series-posts-grid { 
     display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 30px; 
 }
 
@@ -4451,10 +4463,10 @@ html.dark-mode-active .social-share-label {
 /* 시리즈 포스트 그리드 - 너비 조정 및 톤앤매너 적용 */
 .series-posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+    grid-template-columns: repeat(2, 1fr) !important; /* MODIFIED */
     gap: 1.5em;
     justify-content: center;
-    max-width: 950px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -4533,7 +4545,7 @@ html.dark-mode-active .social-share-label {
 /* 모바일 시리즈 포스트 최적화 */
 @media (max-width: 768px) {
     .series-posts-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         gap: 1em;
     }
     
