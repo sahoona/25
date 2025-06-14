@@ -4012,7 +4012,7 @@ body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
     width: 100% !important; /* Verified */
     box-sizing: border-box !important; /* Added */
     /* gap: 8px !important; */ /* Removed */
-    padding-top: 10px !important; /* Added */
+    padding-top: 5px !important; /* Changed from 10px */
     padding-bottom: 10px !important; /* Added */
     /* Removed: min-height, z-index, border, diagnostic padding */
 }
