@@ -182,7 +182,7 @@ a:focus {
 /* Primary content area */
 #primary { 
     width: 100%; 
-    max-width: 800px;
+    max-width: 940px;
     float: none; 
     margin: 0 auto; 
 }
@@ -352,7 +352,7 @@ body:not(.single) .site-main article.post {
     overflow: hidden;
     transition: transform 0.3s ease;
     width: 100% !important;
-    max-width: 800px !important; /* 다른 스타일을 무시하고 800px로 강제 적용 */
+    max-width: 940px !important; /* 다른 스타일을 무시하고 800px로 강제 적용 */
     min-width: 0 !important; /* 다른 min-width 스타일과의 충돌 방지 */
 }
 
@@ -1604,7 +1604,7 @@ html.dark-mode-active .social-share-btn.x-btn {
 /* 목차 컨테이너를 페이지 중앙으로 이동 */
 #gp-toc-container {
     margin: 2.5em auto !important; /* 좌우 자동 마진으로 중앙 정렬 */
-    max-width: 800px !important; /* 최대 너비 설정 */
+    max-width: 940px !important; /* 최대 너비 설정 */
     width: 100% !important; /* 반응형을 위한 100% 너비 */
     text-align: left !important; /* 내부 콘텐츠는 좌측 정렬 유지 */
 }
