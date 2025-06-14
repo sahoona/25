@@ -182,7 +182,7 @@ a:focus {
 /* Primary content area */
 #primary { 
     width: 100%; 
-    max-width: 950px; 
+    max-width: 800px;
     float: none; 
     margin: 0 auto; 
 }
@@ -338,7 +338,7 @@ img[loading="lazy"].loaded {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    padding: 0 15px; 
+    padding: 0;
 }
 
 /* Post cards on home page */
