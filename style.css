@@ -1136,13 +1136,15 @@ html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
     /* 모바일 브레드크럼 겹침 문제 해결 (우선순위 강화) */
     body.single .gp-top-meta-bar .gp-post-category {
         display: flex !important; /* Changed from block */
-        position: static !important;
-        transform: none !important;
-        /* width: 100%; */ /* Removed */
+        position: absolute !important; /* Changed from static */
+        left: 50% !important; /* Added */
+        transform: translateX(-50%) !important; /* Changed from none */
+        width: auto; /* Added explicitly */
+        max-width: 50%; /* Added */
         /* text-align: center; */ /* Removed */
         /* order: 2; */ /* Removed */
-        justify-content: center !important; /* Changed from flex-start */
-        /* flex-grow: 1; */ /* Removed */
+        justify-content: center !important; /* Verified */
+        /* flex-grow: 1; */ /* Verified removed */
         visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
         opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
         overflow: visible !important;
@@ -3993,7 +3995,7 @@ body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
     visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
     opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
     height: auto !important;
-    position: static !important;
+    position: relative; /* Changed from static */
     width: 100% !important;
     gap: 8px !important; /* Changed from 12px */
     /* Removed: min-height, z-index, border, diagnostic padding */
