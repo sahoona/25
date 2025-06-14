@@ -634,6 +634,7 @@ body.single .gp-meta-bar-after-title {
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     vertical-align: top !important;
     margin: 0 !important;
+    position: relative !important; /* Added for tooltip positioning */
 }
 
 .reading-time-meta,
@@ -1913,7 +1914,7 @@ html.dark-mode-active .inside-article {
 body.single .inside-article {
     border-radius: 20px;
     border: 1px solid var(--border-primary);
-    overflow: hidden;
+    overflow: hidden; /* Reverted */
     padding: 30px; /* Added padding for content within the border */
 }
 
@@ -2626,7 +2627,7 @@ pre:hover .copy-code-button {
 .reading-time-meta[data-tooltip-text]:hover::after {
     content: attr(data-tooltip-text);
     position: absolute;
-    bottom: 120%; 
+    bottom: 105%; /* Adjusted bottom position */
     left: 50%; 
     transform: translateX(-50%); 
     background-color: #333;
@@ -2635,7 +2636,9 @@ pre:hover .copy-code-button {
     border-radius: 4px;
     font-size: 0.8em;
     white-space: nowrap;
-    z-index: 10;
+    z-index: 99999 !important; /* Keep z-index */
+    /* border: 2px solid red !important; */ /* Removed Debug border */
+    display: inline-block !important; /* Ensure it occupies space */
 }
 
 html.dark-mode-active .reading-time-meta[data-tooltip-text]:hover::after {
@@ -3595,7 +3598,7 @@ pre:hover .copy-code-button { opacity: 1; }
 .reading-time-meta[data-tooltip-text]:hover::after { 
     content: attr(data-tooltip-text); 
     position: absolute; 
-    bottom: 120%; 
+    bottom: 105%; /* Adjusted bottom position */
     left: 50%; 
     transform: translateX(-50%); 
     background-color: #333; 
@@ -3604,7 +3607,9 @@ pre:hover .copy-code-button { opacity: 1; }
     border-radius: 4px; 
     font-size: 0.8em; 
     white-space: nowrap; 
-    z-index: 10; 
+    z-index: 99999 !important; /* Keep z-index */
+    /* border: 2px solid red !important; */ /* Removed Debug border */
+    display: inline-block !important; /* Ensure it occupies space */
 }
 
 @media (max-width: 768px) { 
