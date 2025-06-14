@@ -375,7 +375,7 @@ body:not(.single) article.post div.inside-article {
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
     background-color: var(--bg-secondary) !important;
-    border: 1px solid var(--border-primary);
+    border: none !important;
     border-radius: 20px;
     overflow: hidden;
     box-sizing: border-box !important;
@@ -746,6 +746,16 @@ html.dark-mode-active .byline {
 
 /* 홈 화면 요약 텍스트만 제한 */
 body:not(.single) .entry-summary p { display: -webkit-box !important; -webkit-line-clamp: 4 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; text-overflow: ellipsis !important; min-height: calc(1em * 1.75 * 4); }
+
+/* Limit summary text for cards at the bottom of single posts */
+body.single .site-main article[class*="post-"] .entry-summary p {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-height: calc(1em * 1.75 * 4);
+}
 
 /* 본문 스타일 제거 - 구텐베르크 원본 유지 */
 /* article.post .entry-content p:not(:is(blockquote p, .no-ident)) { padding-left: 1.5em !important; } */
@@ -1698,7 +1708,7 @@ html.dark-mode-active #respond {
 
 .site-main article[class*="post-"] > .inside-article {
     background-color: var(--bg-secondary) !important;
-    border: 1px solid var(--border-primary) !important;
+    border: none !important;
     border-radius: 20px !important;
     overflow: hidden !important; /* 내부 이미지가 삐져나오지 않도록 */
 }
