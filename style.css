@@ -433,37 +433,50 @@ body.single .gp-top-meta-bar-container,
 
 body.single .gp-top-meta-bar,
 .single .gp-top-meta-bar {
-    display: flex !important;
-    justify-content: space-between !important; /* Key change: Aligns items to the left and right edges */
-    align-items: center !important; /* Vertically centers all items in the bar */
+    display: grid !important; /* Changed to grid */
+    grid-template-columns: auto 1fr; /* Left buttons, then breadcrumb-lang wrapper */
+    align-items: center !important;
     gap: 15px !important;
     width: 100%;
     min-height: 42px;
+    position: relative !important; /* Retained from general .gp-top-meta-bar rule */
 }
 
 body.single .breadcrumb-lang-wrapper,
 .single .breadcrumb-lang-wrapper {
-    display: flex !important;
+    display: grid !important; /* Nested grid */
+    grid-template-columns: 1fr auto; /* Breadcrumbs take available space, lang switcher to the end */
     align-items: center !important;
     gap: 15px !important;
+    justify-self: stretch; /* Make this wrapper fill its cell in the parent grid */
+}
+
+body.single .gp-top-meta-bar .left-buttons { /* Ensure left-buttons is targeted within the single post context if needed, or use general rule */
+    justify-self: start; /* Align left buttons to the start of their grid cell */
+}
+
+body.single .breadcrumb-lang-wrapper .gp-language-switcher {
+    justify-self: end; /* Align language switcher to the end of its cell in the nested grid */
 }
 
 body.single .gp-post-category,
-body.single .gp-top-meta-bar .gp-post-category,
+body.single .gp-top-meta-bar .gp-post-category, /* More specific selector */
 .single .gp-top-meta-bar .gp-post-category,
 .single .gp-post-category {
     display: flex !important;
+    justify-content: center !important; /* Center flex items (links) within the breadcrumb container */
     align-items: center !important;
     flex-wrap: wrap !important;
     gap: 5px !important;
     flex-direction: row !important;
-    /* Centering styles for breadcrumbs in top-meta-bar on single posts */
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: auto !important;
-    margin: 0 !important;
+    position: static !important; /* Changed from absolute */
+    top: auto !important; /* Reset */
+    left: auto !important; /* Reset */
+    transform: none !important; /* Reset */
+    width: auto !important; /* Allow it to size naturally or be controlled by grid cell */
+    margin: 0 !important; /* Reset margins from absolute positioning */
+    justify-self: center; /* Center the breadcrumb container itself in its grid cell (in .breadcrumb-lang-wrapper) */
+    text-align: center;
 }
 .entry-title { background-color: transparent !important; padding: 20px 25px !important; border-radius: 15px !important; font-size: 1.8em !important; font-weight: 600 !important; text-align: center; width: auto; }
 .entry-title a {
@@ -1940,16 +1953,17 @@ html.dark-mode-active-loading body {
 .gp-top-meta-bar .left-buttons { 
     display: flex; 
     gap: 8px; 
-    z-index: 1; /* Ensure left buttons are above the centered breadcrumbs */
+    /* z-index: 1; /* Less relevant for grid layout unless overlapping occurs */
+    /* justify-self: start; /* This is now handled by body.single .gp-top-meta-bar .left-buttons */
 }
-.gp-top-meta-bar .gp-post-category { 
-    /* justify-self removed for flexbox compatibility */
-}
+/* The rule for .gp-top-meta-bar .gp-post-category (general one) is fine as is, or might be overridden by single post specific one. */
 
+/* The general .breadcrumb-lang-wrapper might not need changes if single post overrides are sufficient. */
+/* Retaining its flex properties for other contexts if any. */
 .breadcrumb-lang-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Default for non-single or if not overridden */
     gap: 15px;
     flex-wrap: wrap;
 }
@@ -1957,7 +1971,7 @@ html.dark-mode-active-loading body {
 .gp-top-meta-bar .gp-language-switcher { 
     display: flex;
     gap: 5px;
-    justify-self: end;
+    /* justify-self: end; /* This is now handled by body.single .breadcrumb-lang-wrapper .gp-language-switcher */
 }
 
 body:not(.single) .gp-top-meta-bar-container { display: none; }
@@ -2544,7 +2558,25 @@ html.dark-mode-active .gp-read-more-btn:hover {
 .series-post-content { 
     display: flex; 
     flex-direction: column; 
+    padding: 1.5em; /* Existing padding, ensure it's here if this is the primary .series-post-content rule */
 }
+
+/* Added margin for category links within series posts */
+.series-post-content .gp-post-category.series-item-categories {
+    margin-bottom: 10px; /* Space above the title */
+    /* Flex properties like justify-content, align-items, gap for links are inherited from .gp-post-category */
+    /* Ensure links wrap and center if many categories */
+    justify-content: flex-start; /* Align category pills to the start */
+    gap: 4px; /* Smaller gap for category pills */
+}
+
+/* Adjust styling for category links within series items if needed, to make them smaller */
+.series-post-content .gp-post-category.series-item-categories a {
+    padding: 4px 10px; /* Smaller padding */
+    font-size: 0.8em;  /* Smaller font size */
+    min-height: auto;  /* Adjust min-height if necessary */
+}
+
 
 .series-post-title { 
     font-size: 1.05em; 
@@ -4469,6 +4501,13 @@ html.dark-mode-active .social-share-label {
 
 .series-post-content {
     padding: 1.5em;
+}
+
+/* Ensure the general .series-post-content padding is not overridden by mistake if it was part of the search block */
+.series-post-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5em; /* Re-affirm if it was part of the search block */
 }
 
 .series-post-title {

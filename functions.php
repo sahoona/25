@@ -1045,9 +1045,18 @@ function gp_series_posts_output() {
                     }
                 }
                 ?>
+                <?php $categories_list = get_the_category_list(', '); // Using ', ' as a separator ?>
                 <a href="<?php the_permalink(); ?>" rel="bookmark" class="series-post-item">
                     <div class="series-post-thumbnail"><?php echo $series_thumb_html; ?></div>
-                    <div class="series-post-content"><h3 class="series-post-title"><?php the_title(); ?></h3><div class="series-post-meta"><?php echo get_the_date(); ?></div></div>
+                    <div class="series-post-content">
+                        <?php
+                        if (!empty($categories_list)) {
+                            echo '<div class="gp-post-category series-item-categories">' . $categories_list . '</div>';
+                        }
+                        ?>
+                        <h3 class="series-post-title"><?php the_title(); ?></h3>
+                        <div class="series-post-meta"><?php echo get_the_date(); ?></div>
+                    </div>
                 </a>
                 <?php
             }
