@@ -182,7 +182,7 @@ a:focus {
 /* Primary content area */
 #primary { 
     width: 100%; 
-    max-width: 950px; 
+    max-width: 800px;
     float: none; 
     margin: 0 auto; 
 }
@@ -338,21 +338,22 @@ img[loading="lazy"].loaded {
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    padding: 0 15px; 
+    padding: 0;
 }
 
 /* Post cards on home page */
-.site-main article.post {
+body:not(.single) .site-main article.post {
     margin: 0 auto 35px auto;
     background-color: transparent;
-    border: none; /* Border moved to .inside-article */
-    padding-bottom: 0 !important; /* Maintained from previous revert */
-    border-radius: 20px !important; /* Straight corners */
-    box-shadow: none !important; /* 카드 그림자 제거 */
+    border: none;
+    padding-bottom: 0 !important;
+    border-radius: 20px !important;
+    box-shadow: none !important;
     overflow: hidden;
-    transition: transform 0.3s ease; /* Changed from 'all' for Part 3 */
-    width: 100%;
-    max-width: 800px;
+    transition: transform 0.3s ease;
+    width: 100% !important;
+    max-width: 800px !important; /* 다른 스타일을 무시하고 800px로 강제 적용 */
+    min-width: 0 !important; /* 다른 min-width 스타일과의 충돌 방지 */
 }
 
 /* Post card hover effect */
@@ -366,7 +367,7 @@ img[loading="lazy"].loaded {
     outline: none !important;
 }
 
-.inside-article { padding: 25px !important; display: flex; flex-direction: column; gap: 25px; }
+.inside-article { padding: 25px !important; display: flex; flex-direction: column; gap: 25px; box-sizing: border-box !important; }
 body:not(.single) .inside-article { padding: 25px !important; }
 
 /* Specific resets for inner container on homepage cards */
@@ -377,6 +378,7 @@ body:not(.single) article.post div.inside-article {
     border: 1px solid var(--border-primary);
     border-radius: 20px;
     overflow: hidden;
+    box-sizing: border-box !important;
 }
 
 /* 홈 화면 브레드크럼 중앙 정렬 & AJAX loaded posts fix */
@@ -4452,7 +4454,7 @@ html.dark-mode-active .social-share-label {
     grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
     gap: 1.5em;
     justify-content: center;
-    max-width: 1000px;
+    max-width: 950px;
     margin: 0 auto;
 }
 
@@ -5299,6 +5301,3 @@ html.dark-mode-active .logged-in-as a {
 html.dark-mode-active #respond {
     border-top-color: var(--border-primary) !important;
 }
-
-
-
