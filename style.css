@@ -787,7 +787,7 @@ button#gp-lang-switcher-button, /* Specific ID for the button */
     font-weight: 500;
     color: var(--text-secondary);
     background-color: var(--bg-secondary);
-    border: 1px solid var(--border-secondary);
+    border: none !important;
     padding: 7px 10px; /* Adjusted padding */
     border-radius: 12px; /* Consistent with other small buttons */
     cursor: pointer;
@@ -1948,7 +1948,7 @@ html.dark-mode-active-loading body {
 .gp-top-meta-bar-container {
     margin: 0 0 20px 0 !important;
     padding: 0 !important;
-    margin-top: 10px !important;
+    margin-top: 25px !important;
 }
 
 /* Adjust vertical position for single posts */

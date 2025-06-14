@@ -742,7 +742,7 @@ function gp_meta_after_title() {
     global $post;
     $author_display_name = get_the_author_meta('display_name', $post->post_author);
     $is_updated = get_the_modified_time('U') > get_the_time('U') + DAY_IN_SECONDS;
-    $word_count = str_word_count(strip_tags($post->post_content));
+    $word_count = count(preg_split('/\s+/', trim(strip_tags($post->post_content)), -1, PREG_SPLIT_NO_EMPTY));
     $reading_time = ceil($word_count / 225);
     ?>
     <div class="gp-meta-bar-after-title">
