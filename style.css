@@ -378,10 +378,27 @@ body:not(.single) article.post div.inside-article {
     overflow: hidden;
 }
 
-/* 홈 화면 브레드크럼 중앙 정렬 */
+/* 홈 화면 브레드크럼 중앙 정렬 & AJAX loaded posts fix */
 body:not(.single) .entry-header .gp-post-category {
-    width: 100%;
-    margin-bottom: 15px !important;
+    /* Existing styles from general .gp-post-category or this specific rule */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important; /* From .gp-post-category general rule */
+    text-align: center !important; /* From .gp-post-category general rule */
+    width: 100%; /* Already exists */
+    margin-bottom: 15px !important; /* Already exists */
+
+    /* Overrides and explicit settings for AJAX-loaded items */
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
 }
 body:not(.single) .entry-header,
 body:not(.single) .post-image,
@@ -399,6 +416,11 @@ body:not(.single) .site-main article.post:hover { transform: translateY(-5px); b
 .entry-header, .featured-image, .post-image, .entry-summary, footer.tags-footer, .list-tags-container, .post-footer-sections, .read-more-container { margin: 0 !important; }
 .entry-header, .featured-image, .post-image, .entry-content, .entry-summary, footer.tags-footer, .list-tags-container, .post-footer-sections, .read-more-container { width: 100%; }
 .entry-header { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+
+/* Add position relative for non-single entry headers for positioning context */
+body:not(.single) article.post .entry-header {
+    position: relative;
+}
 
 /* 본문 페이지 브레드크럼 스타일 - 강력한 중앙정렬 */
 /* === DEFINITIVE TOP META BAR ALIGNMENT FIX === */
@@ -771,13 +793,21 @@ button#gp-lang-switcher-button:hover,
 }
 
 button#gp-lang-switcher-button .dropdown-icon {
-    margin-left: 6px;
-    font-size: 0.7em; /* Smaller than button text */
-    transition: transform 0.2s ease;
+    display: inline-block;
+    width: 12px; /* Adjust size as needed */
+    height: 12px; /* Adjust size as needed */
+    background-color: currentColor; /* Will take the color of the button text */
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    margin-left: 8px; /* Space between button text and icon */
+    transition: transform 0.25s ease-in-out;
+    vertical-align: middle; /* Align with text if button text wraps or has different line-height */
 }
 
 .gp-language-switcher.active button#gp-lang-switcher-button .dropdown-icon {
-    transform: rotate(180deg); /* Flip arrow when active */
+    transform: rotate(180deg);
 }
 
 ul#gp-lang-switcher-list,
