@@ -835,7 +835,7 @@ ul#gp-lang-switcher-list, /* Specific ID for the list */
     top: calc(100% + 6px); /* Position below the button with a small gap */
     right: 0; /* Align to the right edge of the .gp-language-switcher container */
     background-color: var(--bg-secondary);
-    border: 1px solid var(--border-primary);
+    border: none !important;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Softer shadow */
     z-index: 1001; /* Ensure it's above other content, like breadcrumbs or nearby elements */
@@ -876,10 +876,13 @@ ul#gp-lang-switcher-list li a.lang-link:focus {
 }
 
 ul#gp-lang-switcher-list li.current-lang span.lang-text {
-    color: var(--text-muted);
+    background-color: #007bff !important;
+    color: white !important;
     font-weight: 600;
     cursor: default; /* Indicate it's not clickable */
-    background-color: var(--bg-tertiary); /* Visually distinct background */
+    border: none !important; /* Ensure no border if one was inherited */
+    padding: 8px 10px !important; /* Ensure padding is consistent if overridden */
+    border-radius: 8px !important; /* Ensure consistent rounding */
 }
 
 /* Dark Mode Styles for the New Language Switcher */
@@ -1945,6 +1948,7 @@ html.dark-mode-active-loading body {
 .gp-top-meta-bar-container {
     margin: 0 0 20px 0 !important;
     padding: 0 !important;
+    margin-top: 10px !important;
 }
 
 /* Adjust vertical position for single posts */
