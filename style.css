@@ -1136,16 +1136,17 @@ html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
     /* 모바일 브레드크럼 겹침 문제 해결 (우선순위 강화) */
     body.single .gp-top-meta-bar .gp-post-category {
         display: flex !important; /* Changed from block */
-        position: absolute !important; /* Changed from static */
-        left: 50% !important; /* Added */
-        top: 50% !important; /* Added for vertical centering */
-        transform: translate(-50%, -50%) !important; /* Changed for vertical centering */
-        width: auto; /* Added explicitly */
-        max-width: 50%; /* Added */
+        /* position: absolute !important; */ /* Removed */
+        /* left: 50% !important; */ /* Removed */
+        /* top: 50% !important; */ /* Removed */
+        transform: none !important; /* Changed from translate(-50%, -50%) */
+        width: 100% !important; /* Changed from auto */
+        /* max-width: 50%; */ /* Removed */
         /* text-align: center; */ /* Removed */
-        /* order: 2; */ /* Removed */
+        order: 1 !important; /* Added */
         justify-content: center !important; /* Verified */
         /* flex-grow: 1; */ /* Verified removed */
+        margin-bottom: 10px !important; /* Added */
         visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
         opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
         overflow: visible !important;
@@ -3993,10 +3994,11 @@ body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
     flex-direction: row !important; /* Changed from column */
     align-items: center !important; /* Ensured */
     justify-content: space-between !important; /* Changed from flex-start */
+    flex-wrap: wrap !important; /* Added */
     visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
     opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
     height: auto !important; /* Verified */
-    position: relative; /* Changed from static */
+    position: static; /* Changed from relative */
     width: 100% !important;
     /* gap: 8px !important; */ /* Removed */
     padding-top: 10px !important; /* Added */
@@ -4030,7 +4032,7 @@ body.single .gp-top-meta-bar-container {
     .gp-top-meta-bar .left-buttons {
         display: flex;
         justify-content: center; /* If it contains multiple buttons */
-        /* order: 1; /* Removed */
+        order: 2 !important; /* Added */
         /* justify-self: center !important; /* Removed as parent is flex now */
     }
 
@@ -4059,7 +4061,8 @@ body.single .gp-top-meta-bar-container {
 
     /* Push language switcher to the right in mobile single post view */
     body.single .gp-top-meta-bar > .gp-language-switcher {
-        /* margin-left: auto !important; */ /* Removed */
+        /* margin-left: auto !important; */ /* Verified removed */
+        order: 3 !important; /* Added */
     }
 }
 
