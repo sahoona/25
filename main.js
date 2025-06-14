@@ -523,27 +523,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * Setup language toggle functionality
+     * Setup language toggle functionality for the new switcher structure
      */
     function setupLanguageToggle() {
-        const languageToggleBtn = document.getElementById('languageToggleBtn');
-        if (languageToggleBtn) {
-            languageToggleBtn.addEventListener('click', (e) => {
-                if (e.target.closest('a') === null) { 
-                    e.currentTarget.classList.toggle('active'); 
-                }
-            });
-            document.addEventListener('click', (e) => {
-                if (languageToggleBtn && !languageToggleBtn.contains(e.target) && !e.target.closest('#languageToggleBtn')) {
-                    languageToggleBtn.classList.remove('active');
-                }
-            });
-            const currentLangItem = languageToggleBtn.querySelector('.current-lang-item');
-            if (currentLangItem) {
-                currentLangItem.classList.add('disabled-language-item');
-                currentLangItem.addEventListener('click', e => e.preventDefault());
-            }
+        const switcherContainer = document.querySelector('.gp-language-switcher'); // Main container
+        if (!switcherContainer) return;
+
+        const toggleButton = document.getElementById('gp-lang-switcher-button');
+        const languageList = document.getElementById('gp-lang-switcher-list');
+
+        if (!toggleButton || !languageList) {
+            console.warn('Language switcher button or list not found. Check IDs: gp-lang-switcher-button, gp-lang-switcher-list');
+            return;
         }
+
+        toggleButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent the document click listener from immediately closing it
+            const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded) {
+                languageList.setAttribute('hidden', '');
+                toggleButton.setAttribute('aria-expanded', 'false');
+                switcherContainer.classList.remove('active'); // Optional: for styling the container
+            } else {
+                languageList.removeAttribute('hidden');
+                toggleButton.setAttribute('aria-expanded', 'true');
+                switcherContainer.classList.add('active'); // Optional: for styling the container
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            // Close if the click is outside the switcher container
+            if (!switcherContainer.contains(event.target)) {
+                languageList.setAttribute('hidden', '');
+                toggleButton.setAttribute('aria-expanded', 'false');
+                switcherContainer.classList.remove('active'); // Optional: for styling the container
+            }
+        });
+
+        // Optional: Keyboard navigation for accessibility (Escape key to close)
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && toggleButton.getAttribute('aria-expanded') === 'true') {
+                languageList.setAttribute('hidden', '');
+                toggleButton.setAttribute('aria-expanded', 'false');
+                switcherContainer.classList.remove('active'); // Optional: for styling the container
+            }
+        });
     }
     
     /**

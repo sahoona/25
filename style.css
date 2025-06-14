@@ -733,40 +733,144 @@ footer.tags-footer .tags-links {
 /* ==========================================================================
    10. Language Switcher (Multilingual SEO)
    ========================================================================== */
-/* Styles for the language switcher buttons. */
-.gp-language-switcher { 
-    display: flex; 
-    gap: 8px; 
-    margin-left: auto; 
-    align-self: center; 
+/* Styles for the NEW language switcher dropdown. */
+.gp-language-switcher {
+    position: relative; /* For dropdown positioning */
+    display: inline-block; /* Adjust as needed for layout within breadcrumb bar */
+    margin-left: auto; /* Align to the right if in a flex container */
+    align-self: center;
 }
-.gp-language-switcher a { 
-    font-size: 0.9em; 
-    font-weight: 600; 
-    color: var(--text-secondary); 
+
+button#gp-lang-switcher-button,
+.gp-language-button { /* Fallback class if ID is not specific enough */
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text-secondary);
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-secondary);
-    padding: 6px 12px; 
-    border-radius: 15px; 
-    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    padding: 8px 12px; /* Slightly more padding for button feel */
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
+    min-width: 45px; /* Min width for KR/EN etc. */
     line-height: 1;
 }
-.gp-language-switcher a:hover { 
-    background-color: #34495e; 
-    color: var(--white-color); 
-    border-color: #34495e;
-    transform: scale(1.05); 
+
+button#gp-lang-switcher-button:hover,
+.gp-language-button:hover,
+.gp-language-switcher.active button#gp-lang-switcher-button, /* Style when dropdown is open */
+.gp-language-switcher.active .gp-language-button {
+    background-color: var(--accent-color);
+    color: var(--white-color);
+    border-color: var(--accent-color);
+    transform: scale(1.03); /* Subtle lift */
 }
-.gp-language-switcher a.current-lang { 
-    background-color: var(--accent-color); 
-    color: var(--white-color) !important; 
+
+button#gp-lang-switcher-button .dropdown-icon {
+    margin-left: 6px;
+    font-size: 0.7em; /* Smaller than button text */
+    transition: transform 0.2s ease;
+}
+
+.gp-language-switcher.active button#gp-lang-switcher-button .dropdown-icon {
+    transform: rotate(180deg); /* Flip arrow when active */
+}
+
+ul#gp-lang-switcher-list,
+.language-list { /* Fallback class */
+    display: none; /* Hidden by default, JS uses `hidden` attribute but this is a fallback */
+    position: absolute;
+    top: calc(100% + 5px); /* Below the button with a small gap */
+    right: 0; /* Align to the right of the container */
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px; /* Softer radius for dropdown */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000; /* Ensure it's above other content */
+    min-width: 120px; /* Minimum width for the dropdown */
+    list-style: none;
+    padding: 5px; /* Inner padding for the list items */
+    margin: 0;
+}
+
+.gp-language-switcher.active ul#gp-lang-switcher-list,
+.gp-language-switcher.active .language-list,
+ul#gp-lang-switcher-list:not([hidden]), /* When JS removes hidden attr */
+.language-list:not([hidden]) {
+    display: block;
+}
+
+ul#gp-lang-switcher-list li.lang-item {
+    margin: 0;
+}
+
+ul#gp-lang-switcher-list li a.lang-link,
+ul#gp-lang-switcher-list li span.lang-text {
+    display: block;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-radius: 6px; /* Slight radius for items */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+ul#gp-lang-switcher-list li a.lang-link:hover,
+ul#gp-lang-switcher-list li a.lang-link:focus {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-color);
+}
+
+ul#gp-lang-switcher-list li.current-lang span.lang-text {
+    color: var(--text-muted); /* Different color for current language */
+    font-weight: 600; /* Make it bolder */
+    cursor: default;
+}
+
+/* Dark Mode for New Language Switcher */
+html.dark-mode-active .gp-language-switcher button#gp-lang-switcher-button,
+html.dark-mode-active .gp-language-switcher .gp-language-button {
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border-color: var(--border-secondary);
+}
+
+html.dark-mode-active .gp-language-switcher button#gp-lang-switcher-button:hover,
+html.dark-mode-active .gp-language-switcher .gp-language-button:hover,
+html.dark-mode-active .gp-language-switcher.active button#gp-lang-switcher-button,
+html.dark-mode-active .gp-language-switcher.active .gp-language-button {
+    background-color: var(--accent-color);
+    color: var(--white-color); /* Ensure text is white on accent bg */
     border-color: var(--accent-color);
 }
+
+html.dark-mode-active ul#gp-lang-switcher-list,
+html.dark-mode-active .language-list {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-primary);
+}
+
+html.dark-mode-active ul#gp-lang-switcher-list li a.lang-link,
+html.dark-mode-active ul#gp-lang-switcher-list li span.lang-text {
+    color: var(--text-primary);
+}
+
+html.dark-mode-active ul#gp-lang-switcher-list li a.lang-link:hover,
+html.dark-mode-active ul#gp-lang-switcher-list li a.lang-link:focus {
+    background-color: var(--bg-tertiary); /* Darker hover for items */
+    color: var(--accent-color);
+}
+
+html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
+    color: var(--text-muted); /* Muted text for current lang in dark mode */
+}
+
 
 /* ==========================================================================
    12. Post Navigation (Custom)
