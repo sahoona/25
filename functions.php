@@ -744,6 +744,7 @@ function gp_meta_after_title() {
     $is_updated = get_the_modified_time('U') > get_the_time('U') + DAY_IN_SECONDS;
     $word_count = count(preg_split('/\s+/', trim(strip_tags($post->post_content)), -1, PREG_SPLIT_NO_EMPTY));
     $reading_time = ceil($word_count / 225);
+    $reading_time = max(1, $reading_time); // Ensure at least 1 minute
     ?>
     <div class="gp-meta-bar-after-title">
         <div class="posted-on-wrapper" title="<?php echo $is_updated ? 'Click to see publish date' : ''; ?>">
@@ -760,7 +761,7 @@ function gp_meta_after_title() {
                 <div class="date-secondary"><span class="date-label">Published:</span><time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('Y.m.d')); ?></time></div>
             <?php endif; ?>
         </div>
-        <span class="reading-time-meta" data-tooltip-text="<?php echo $word_count; ?> words"><?php echo max(1, $reading_time); ?> min read</span>
+        <span class="reading-time-meta" data-tooltip-text="<?php echo $word_count; ?> words"><?php echo $reading_time; ?> MIN READ</span>
         <span class="byline"><span class="author-label">by</span><span class="author-name-no-link"><?php echo esc_html($author_display_name); ?></span></span>
     </div>
     <?php
