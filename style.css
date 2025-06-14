@@ -1135,12 +1135,16 @@ html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
 
     /* 모바일 브레드크럼 겹침 문제 해결 (우선순위 강화) */
     body.single .gp-top-meta-bar .gp-post-category {
-        display: block !important;
-        position: static !important;
-        transform: none !important;
-        width: 100%;
-        text-align: center;
-        order: 2;
+        display: flex !important; /* Changed from block */
+        position: absolute !important; /* Changed from static */
+        left: 50% !important; /* Added */
+        transform: translateX(-50%) !important; /* Changed from none */
+        width: auto; /* Added explicitly */
+        max-width: 50%; /* Added */
+        /* text-align: center; */ /* Removed */
+        /* order: 2; */ /* Removed */
+        justify-content: center !important; /* Verified */
+        /* flex-grow: 1; */ /* Verified removed */
         visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
         opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
         overflow: visible !important;
@@ -3985,14 +3989,15 @@ pre:hover .copy-code-button {
 /* Step 1: Make .gp-top-meta-bar static on mobile */
 body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
     display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
+    flex-direction: row !important; /* Changed from column */
+    align-items: center !important; /* Ensured */
+    justify-content: space-between !important; /* Changed from flex-start */
     visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
     opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
     height: auto !important;
-    position: static !important;
+    position: relative; /* Changed from static */
     width: 100% !important;
-    gap: 12px !important; /* Ensured from generic rule */
+    gap: 8px !important; /* Changed from 12px */
     /* Removed: min-height, z-index, border, diagnostic padding */
 }
 
@@ -4020,10 +4025,10 @@ body.single .gp-top-meta-bar-container {
 }
     /* 모바일 URL 복사 버튼 순서 조정 */
     .gp-top-meta-bar .left-buttons {
-        justify-self: center !important; /* Already centered by justify-items on parent, but good for clarity */
         display: flex;
         justify-content: center; /* If it contains multiple buttons */
-        order: 1; /* URL 복사 버튼을 첫 번째로 표시 */
+        /* order: 1; /* Removed */
+        /* justify-self: center !important; /* Removed as parent is flex now */
     }
 
     .breadcrumb-lang-wrapper { /* This contains breadcrumbs and language switcher */
@@ -4047,6 +4052,11 @@ body.single .gp-top-meta-bar-container {
         text-align: center;
         justify-content: center;
         flex-wrap: wrap;
+    }
+
+    /* Push language switcher to the right in mobile single post view */
+    body.single .gp-top-meta-bar > .gp-language-switcher {
+        /* margin-left: auto !important; */ /* Removed */
     }
 }
 
