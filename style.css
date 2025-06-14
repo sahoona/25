@@ -1138,7 +1138,8 @@ html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
         display: flex !important; /* Changed from block */
         position: absolute !important; /* Changed from static */
         left: 50% !important; /* Added */
-        transform: translateX(-50%) !important; /* Changed from none */
+        top: 50% !important; /* Added for vertical centering */
+        transform: translate(-50%, -50%) !important; /* Changed for vertical centering */
         width: auto; /* Added explicitly */
         max-width: 50%; /* Added */
         /* text-align: center; */ /* Removed */
@@ -3994,10 +3995,12 @@ body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
     justify-content: space-between !important; /* Changed from flex-start */
     visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
     opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
-    height: auto !important;
+    height: auto !important; /* Verified */
     position: relative; /* Changed from static */
     width: 100% !important;
-    gap: 8px !important; /* Changed from 12px */
+    /* gap: 8px !important; */ /* Removed */
+    padding-top: 10px !important; /* Added */
+    padding-bottom: 10px !important; /* Added */
     /* Removed: min-height, z-index, border, diagnostic padding */
 }
 
