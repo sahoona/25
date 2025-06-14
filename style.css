@@ -5300,5 +5300,11 @@ html.dark-mode-active #respond {
     border-top-color: var(--border-primary) !important;
 }
 
-
-
+/* Ensure post cards at the bottom of single posts are max 800px wide */
+body.single .site-main > article.post {
+    max-width: 800px !important; /* Apply the desired max-width */
+    width: 100% !important; /* Ensure it behaves like other cards */
+    float: none !important; /* Override potential floats */
+    margin-left: auto !important; /* Center the element */
+    margin-right: auto !important; /* Center the element */
+}
