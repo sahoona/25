@@ -366,7 +366,7 @@ img[loading="lazy"].loaded {
     outline: none !important;
 }
 
-.inside-article { padding: 25px !important; display: flex; flex-direction: column; gap: 25px; }
+.inside-article { padding: 25px !important; display: flex; flex-direction: column; gap: 25px; box-sizing: border-box !important; }
 body:not(.single) .inside-article { padding: 25px !important; }
 
 /* Specific resets for inner container on homepage cards */
@@ -377,7 +377,7 @@ body:not(.single) article.post div.inside-article {
     border: 1px solid var(--border-primary);
     border-radius: 20px;
     overflow: hidden;
-    box-sizing: border-box;
+    box-sizing: border-box !important;
 }
 
 /* 홈 화면 브레드크럼 중앙 정렬 & AJAX loaded posts fix */
