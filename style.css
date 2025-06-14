@@ -439,9 +439,9 @@ body.single .gp-top-meta-bar,
     width: 100% !important;
     min-height: 42px; /* Or original height */
     position: relative !important;
-    padding: 0 15px !important; /* Keep padding if it was there before grid */
+    padding: 0 !important; /* Removed horizontal padding */
     box-sizing: border-box !important;
-    gap: 0; /* Remove grid gap, flex gap might be different or not used */
+    /* gap: 0; /* Flex gap not needed when using space-between for outer elements */
 }
 
 /*
@@ -1947,9 +1947,9 @@ html.dark-mode-active-loading body {
     padding: 0 !important;
 }
 
-/* Adjust vertical position for single posts to be slightly higher */
+/* Adjust vertical position for single posts */
 body.single .gp-top-meta-bar-container {
-    margin: -10px 0 15px 0 !important; /* -10px top, 0 right, 15px bottom, 0 left */
+    margin: 0 0 15px 0 !important; /* 0 top, 0 right, 15px bottom, 0 left */
 }
 
 .gp-top-meta-bar {
