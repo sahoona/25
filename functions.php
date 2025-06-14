@@ -240,6 +240,21 @@ function gp_add_resource_hints() {
     // Preload Google Fonts
     echo '<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' . "
 ";
+    // Preload NanumSquareNeo Light
+    echo '<link rel="preload" href="https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-aLt.woff" as="font" type="font/woff" crossorigin="anonymous">' . "
+";
+    // Preload NanumSquareNeo Regular
+    echo '<link rel="preload" href="https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-bRg.woff" as="font" type="font/woff" crossorigin="anonymous">' . "
+";
+    // Preload NanumSquareNeo Bold
+    echo '<link rel="preload" href="https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-cBd.woff" as="font" type="font/woff" crossorigin="anonymous">' . "
+";
+    // Preload NanumSquareNeo ExtraBold
+    echo '<link rel="preload" href="https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-dEb.woff" as="font" type="font/woff" crossorigin="anonymous">' . "
+";
+    // Preload NanumSquareNeo Heavy
+    echo '<link rel="preload" href="https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareNeo/NanumSquareNeoTTF-eHv.woff" as="font" type="font/woff" crossorigin="anonymous">' . "
+";
     // Preload main stylesheet (style.css)
     echo '<link rel="preload" href="' . esc_url(get_stylesheet_uri()) . '" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' . "
 ";
@@ -391,6 +406,56 @@ function gp_add_json_ld_schema() {
     }
 }
 add_action('wp_head', 'gp_add_json_ld_schema', 5);
+
+/**
+ * Adds font selection to the WordPress Customizer.
+ *
+ * @param WP_Customize_Manager $wp_customize Theme Customizer object.
+ */
+function gp_child_customize_register_fonts( $wp_customize ) {
+    // Add a new section for Font Settings
+    $wp_customize->add_section( 'gp_child_font_section', array(
+        'title'       => __( 'GP 자식 테마 폰트 설정', 'gp_child_theme' ),
+        'priority'    => 150,
+    ) );
+
+    // Add a setting for the Primary Font
+    $wp_customize->add_setting( 'gp_child_primary_font', array(
+        'type'              => 'theme_mod',
+        'default'           => 'noto_sans_kr',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+
+    // Add a control for the Primary Font
+    $wp_customize->add_control( 'gp_child_primary_font_control', array(
+        'label'       => __( '기본 폰트', 'gp_child_theme' ),
+        'section'     => 'gp_child_font_section',
+        'settings'    => 'gp_child_primary_font',
+        'type'        => 'select',
+        'choices'     => array(
+            'noto_sans_kr' => __( '기본값 (Noto Sans KR)', 'gp_child_theme' ),
+            'nanum_square_neo' => __( '나눔스퀘어 네오 (NanumSquareNeo)', 'gp_child_theme' ),
+        ),
+    ) );
+}
+add_action( 'customize_register', 'gp_child_customize_register_fonts' );
+
+/**
+ * Applies the selected custom font CSS to the head.
+ */
+function gp_child_apply_custom_font_css() {
+    $selected_font = get_theme_mod( 'gp_child_primary_font', 'noto_sans_kr' );
+
+    if ( 'nanum_square_neo' === $selected_font ) {
+        ?>
+        <style id="gp-child-custom-font">
+        body, button, input, select, textarea { font-family: 'NanumSquareNeo', sans-serif; }
+        </style>
+        <?php
+    }
+    // If 'noto_sans_kr' is selected, we rely on the main style.css
+}
+add_action( 'wp_head', 'gp_child_apply_custom_font_css' );
 
 
 // =========================================================================
