@@ -556,61 +556,101 @@ function gp_home_breadcrumb_output() {
 }
 
 function gp_language_switcher_output() {
-    if (function_exists('pll_the_languages')) {
-        $translations = pll_the_languages(['raw' => 1]);
+    if (!function_exists('pll_the_languages')) {
+        return; // Polylang not active
+    }
 
-        // Ensure translations is an array and there are at least two languages.
-        if (!is_array($translations) || count($translations) < 1) {
-            return;
-        }
+    // Get all available languages, do not hide if only one is configured
+    $translations = pll_the_languages(['raw' => 1, 'hide_if_empty' => false]);
 
-        $current_lang_display = '';
-        $current_lang_slug_for_hreflang = ''; // Store original slug for hreflang
-        $other_lang_url = '';
-        $other_lang_name_for_aria = ''; // For aria-label
+    if (empty($translations) || !is_array($translations)) {
+        // No languages configured or error fetching, so don't output anything.
+        return;
+    }
 
-        // First pass: Find current language details
-        foreach ($translations as $lang) {
-            if ($lang['current_lang']) {
-                $current_lang_slug_upper = strtoupper($lang['slug']);
-                $current_lang_display = ($current_lang_slug_upper === 'KO') ? 'KR' : $current_lang_slug_upper;
-                $current_lang_slug_for_hreflang = $lang['slug']; // Use original slug for hreflang
-                break;
-            }
-        }
+    $current_lang_details = null;
+    $current_lang_slug_for_button = 'LANG'; // Default button text if somehow current isn't found
 
-        // Second pass: Find the 'other' language URL and name (assuming a two-language setup)
-        // If only one language is configured, this part won't find an 'other' language.
-        if (count($translations) > 1) {
-             foreach ($translations as $lang) {
-                if (!$lang['current_lang']) {
-                    $other_lang_url = $lang['url'];
-                    $other_lang_slug_upper = strtoupper($lang['slug']);
-                    // Determine the name of the language being switched TO for the aria-label
-                    if ($other_lang_slug_upper === 'KO') $other_lang_name_for_aria = 'Korean';
-                    elseif ($other_lang_slug_upper === 'EN') $other_lang_name_for_aria = 'English';
-                    else $other_lang_name_for_aria = $other_lang_slug_upper; // Fallback to slug
-                    break;
-                }
-            }
-        }
-
-        // If only one language is registered, display it as static text or hide switcher
-        if (empty($other_lang_url) && !empty($current_lang_display)) {
-             // Option 1: Display static current language (if desired)
-             // echo '<div class="gp-language-switcher static-language-display">';
-             // echo '<span class="language-static-text">' . esc_html($current_lang_display) . '</span>';
-             // echo '</div>';
-             // Option 2: Hide switcher if only one language (current behavior: return nothing if count < 1, so this is fine)
-             return;
-        }
-
-        if ($current_lang_display && $other_lang_url) {
-            echo '<div class="gp-language-switcher single-toggle-button-style">'; // New class for styling
-            echo '<a href="' . esc_url($other_lang_url) . '" hreflang="' . esc_attr($current_lang_slug_for_hreflang) . '" id="gp-lang-toggle-breadcrumb" class="language-toggle-button" aria-label="Switch to ' . esc_attr($other_lang_name_for_aria) . '">' . esc_html($current_lang_display) . '</a>';
-            echo '</div>';
+    // First pass: Find current language details
+    foreach ($translations as $lang_item) {
+        if (!empty($lang_item['current_lang'])) {
+            $current_lang_details = $lang_item;
+            break;
         }
     }
+
+    // Fallback: If no language is marked as current (e.g., Polylang misconfiguration or only one lang)
+    // use the first language in the list for the button display.
+    // The list itself will correctly mark this language as 'current' if it's the only one.
+    if (!$current_lang_details && !empty($translations)) {
+        $current_lang_details = reset($translations); // Get the first language
+        // Ensure this first language is marked as current for the loop below,
+        // if Polylang didn't explicitly mark one (e.g. if only one language exists).
+        // We need to find its key to modify it in the $translations array for the list generation.
+        $first_lang_key = array_key_first($translations);
+        if ($first_lang_key !== null) {
+            $translations[$first_lang_key]['current_lang'] = true;
+        }
+    }
+
+    // If, after all checks, we still don't have details (e.g., $translations was initially empty or became invalid),
+    // it's safest to return. The initial empty check for $translations should cover most cases.
+    if (!$current_lang_details) {
+        return;
+    }
+
+    // Determine button text (e.g., KR, EN)
+    $button_text_slug = strtoupper($current_lang_details['slug']);
+    $current_lang_slug_for_button = ($button_text_slug === 'KO') ? 'KR' : $button_text_slug;
+
+    // Start outputting the switcher HTML
+    // Main container with class for CSS and ID for JS (click outside detection)
+    echo '<div class="gp-language-switcher" id="gp-language-switcher">'; // ID added for JS targeting
+
+    // Button - ID for JS, class for CSS
+    // Ensure WordPress internationalization for aria-label
+    $aria_label_select_language = function_exists('__') ? __('Select language', 'gp_theme') : 'Select language';
+    echo '<button id="gp-lang-switcher-button" class="gp-language-button" aria-haspopup="true" aria-expanded="false" aria-controls="gp-lang-switcher-list" aria-label="' . esc_attr($aria_label_select_language) . '">';
+    echo esc_html($current_lang_slug_for_button);
+    echo '<span class="dropdown-icon" aria-hidden="true">▼</span>'; // Placeholder for dropdown icon
+    echo '</button>';
+
+    // Language list - ID for JS, class for CSS, hidden by default
+    echo '<ul id="gp-lang-switcher-list" class="language-list" role="listbox" aria-labelledby="gp-lang-switcher-button" hidden>';
+
+    foreach ($translations as $lang) {
+        // Prepare attributes and text, ensuring they are properly escaped.
+        $lang_name_attr = esc_attr($lang['name']);
+        $lang_slug_attr = esc_attr($lang['slug']); // Original slug for hreflang
+
+        // Determine display code (KR for KO, otherwise uppercase slug)
+        $lang_code_display = strtoupper($lang_slug_attr);
+        if ($lang_code_display === 'KO') {
+            $lang_code_display = 'KR';
+        }
+        // Text for list item, e.g. "Korean (KR)" or "English (EN)". Or just the code if preferred.
+        // For now, using just the code for simplicity, matching the button.
+        $list_item_display_text = esc_html($lang_code_display);
+
+        $is_current = !empty($lang['current_lang']);
+
+        echo '<li class="lang-item' . ($is_current ? ' current-lang' : '') . '" role="option" aria-selected="' . ($is_current ? 'true' : 'false') . '" lang="' . $lang_slug_attr . '">';
+
+        if ($is_current) {
+            // Current language: display as non-clickable text or styled differently.
+            // Using text from $list_item_display_text for consistency.
+            $current_lang_aria_label = function_exists('__') ? sprintf(__('Current language: %s', 'gp_theme'), $lang_name_attr) : "Current language: {$lang_name_attr}";
+            echo '<span class="lang-text" aria-label="' . esc_attr($current_lang_aria_label) . '">' . $list_item_display_text . '</span>';
+        } else {
+            // Other available languages: display as links.
+            $switch_to_lang_aria_label = function_exists('__') ? sprintf(__('Switch to %s', 'gp_theme'), $lang_name_attr) : "Switch to {$lang_name_attr}";
+            echo '<a href="' . esc_url($lang['url']) . '" hreflang="' . $lang_slug_attr . '" lang="' . $lang_slug_attr . '" class="lang-link" aria-label="' . esc_attr($switch_to_lang_aria_label) . '">' . $list_item_display_text . '</a>';
+        }
+        echo '</li>';
+    }
+
+    echo '</ul>'; // Close ul#gp-lang-switcher-list
+    echo '</div>';  // Close div.gp-language-switcher
 }
 
 
@@ -1018,7 +1058,10 @@ function gp_series_posts_output() {
                 ?>
                 <a href="<?php the_permalink(); ?>" rel="bookmark" class="series-post-item">
                     <div class="series-post-thumbnail"><?php echo $series_thumb_html; ?></div>
-                    <div class="series-post-content"><h3 class="series-post-title"><?php the_title(); ?></h3><div class="series-post-meta"><?php echo get_the_date(); ?></div></div>
+                    <div class="series-post-content">
+                        <h3 class="series-post-title"><?php the_title(); ?></h3>
+                        <div class="series-post-meta"><?php echo get_the_date(); ?></div>
+                    </div>
                 </a>
                 <?php
             }
