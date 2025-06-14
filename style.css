@@ -1135,18 +1135,28 @@ html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
 
     /* 모바일 브레드크럼 겹침 문제 해결 (우선순위 강화) */
     body.single .gp-top-meta-bar .gp-post-category {
-        display: flex !important; /* Changed from block */
-        /* position: absolute !important; */ /* Removed */
-        /* left: 50% !important; */ /* Removed */
-        /* top: 50% !important; */ /* Removed */
-        transform: none !important; /* Changed from translate(-50%, -50%) */
-        width: 100% !important; /* Changed from auto */
-        /* max-width: 50%; */ /* Removed */
-        /* text-align: center; */ /* Removed */
-        order: 1 !important; /* Added */
+        display: flex !important; /* Verified */
+        position: static !important; /* Set */
+        float: none !important; /* Added */
+        clear: both !important; /* Added */
+        transform: none !important; /* Verified */
+        top: auto !important; /* Added */
+        left: auto !important; /* Added */
+        right: auto !important; /* Added */
+        bottom: auto !important; /* Added */
+        width: 100% !important; /* Verified */
+        max-width: 100% !important; /* Added */
+        margin-left: 0 !important; /* Added */
+        margin-right: 0 !important; /* Added */
+        margin-top: 0 !important; /* Added */
+        margin-bottom: 10px !important; /* Verified */
+        padding-left: 0 !important; /* Added */
+        padding-right: 0 !important; /* Added */
+        box-sizing: border-box !important; /* Added */
+        order: 1 !important; /* Verified */
         justify-content: center !important; /* Verified */
+        align-items: center !important; /* Added for completeness */
         /* flex-grow: 1; */ /* Verified removed */
-        margin-bottom: 10px !important; /* Added */
         visibility: visible !important; /* Kept from diagnostic, good for ensuring visibility */
         opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
         overflow: visible !important;
@@ -3999,7 +4009,8 @@ body.single .gp-top-meta-bar, .single .gp-top-meta-bar {
     opacity: 1 !important; /* Kept from diagnostic, good for ensuring visibility */
     height: auto !important; /* Verified */
     position: static; /* Changed from relative */
-    width: 100% !important;
+    width: 100% !important; /* Verified */
+    box-sizing: border-box !important; /* Added */
     /* gap: 8px !important; */ /* Removed */
     padding-top: 10px !important; /* Added */
     padding-bottom: 10px !important; /* Added */
