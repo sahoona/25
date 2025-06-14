@@ -433,50 +433,54 @@ body.single .gp-top-meta-bar-container,
 
 body.single .gp-top-meta-bar,
 .single .gp-top-meta-bar {
-    display: grid !important; /* Changed to grid */
-    grid-template-columns: auto 1fr; /* Left buttons, then breadcrumb-lang wrapper */
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important; /* Three columns: left, center (flexible), right */
     align-items: center !important;
-    gap: 15px !important;
-    width: 100%;
+    gap: 15px !important; /* Gap between grid items */
+    width: 100% !important; /* Ensure full width */
     min-height: 42px;
-    position: relative !important; /* Retained from general .gp-top-meta-bar rule */
+    position: relative !important;
+    padding: 0 15px !important; /* Padding for the bar itself */
+    box-sizing: border-box !important; /* Include padding in width calculation */
 }
 
-body.single .breadcrumb-lang-wrapper,
-.single .breadcrumb-lang-wrapper {
-    display: grid !important; /* Nested grid */
-    grid-template-columns: 1fr auto; /* Breadcrumbs take available space, lang switcher to the end */
+/*
+   The .breadcrumb-lang-wrapper is NOT a direct child grid container of .gp-top-meta-bar on single posts.
+   Its children, .gp-post-category and .gp-language-switcher, are the direct grid items of .gp-top-meta-bar.
+   Thus, the 'display: contents' rule for '.body.single .breadcrumb-lang-wrapper' is removed as it's not relevant here.
+   The general styling for .breadcrumb-lang-wrapper (around line 1268) will apply if it's used in other contexts.
+*/
+
+
+body.single .gp-top-meta-bar .left-buttons {
+    justify-self: start !important; /* Align to the start of the first column */
+    grid-column: 1; /* Explicitly assign to first column */
+}
+
+body.single .gp-top-meta-bar .gp-post-category, /* Targets the breadcrumb container */
+.single .gp-top-meta-bar .gp-post-category {
+    grid-column: 2; /* Assign to the second, flexible column */
+    justify-self: center !important; /* Center the breadcrumb block within the 1fr column */
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important; /* Added for completeness */
+    bottom: auto !important; /* Added for completeness */
+    display: flex !important; /* Internal alignment of breadcrumb links */
+    justify-content: center !important;
     align-items: center !important;
-    gap: 15px !important;
-    justify-self: stretch; /* Make this wrapper fill its cell in the parent grid */
+    text-align: center !important;
+    margin: 0 !important;
+    width: 100% !important; /* Let it fill the cell, text-align/justify-content will center content */
+    flex-wrap: wrap !important; /* Existing, good for wrapping links */
+    gap: 5px !important; /* Existing */
+    flex-direction: row !important; /* Existing */
 }
 
-body.single .gp-top-meta-bar .left-buttons { /* Ensure left-buttons is targeted within the single post context if needed, or use general rule */
-    justify-self: start; /* Align left buttons to the start of their grid cell */
-}
-
-body.single .breadcrumb-lang-wrapper .gp-language-switcher {
-    justify-self: end; /* Align language switcher to the end of its cell in the nested grid */
-}
-
-body.single .gp-post-category,
-body.single .gp-top-meta-bar .gp-post-category, /* More specific selector */
-.single .gp-top-meta-bar .gp-post-category,
-.single .gp-post-category {
-    display: flex !important;
-    justify-content: center !important; /* Center flex items (links) within the breadcrumb container */
-    align-items: center !important;
-    flex-wrap: wrap !important;
-    gap: 5px !important;
-    flex-direction: row !important;
-    position: static !important; /* Changed from absolute */
-    top: auto !important; /* Reset */
-    left: auto !important; /* Reset */
-    transform: none !important; /* Reset */
-    width: auto !important; /* Allow it to size naturally or be controlled by grid cell */
-    margin: 0 !important; /* Reset margins from absolute positioning */
-    justify-self: center; /* Center the breadcrumb container itself in its grid cell (in .breadcrumb-lang-wrapper) */
-    text-align: center;
+body.single .gp-top-meta-bar .gp-language-switcher { /* Targets the language switcher's main container */
+    grid-column: 3; /* Assign to the third column */
+    justify-self: end !important; /* Align to the end of the third column */
 }
 .entry-title { background-color: transparent !important; padding: 20px 25px !important; border-radius: 15px !important; font-size: 1.8em !important; font-weight: 600 !important; text-align: center; width: auto; }
 .entry-title a {
@@ -2558,25 +2562,8 @@ html.dark-mode-active .gp-read-more-btn:hover {
 .series-post-content { 
     display: flex; 
     flex-direction: column; 
-    padding: 1.5em; /* Existing padding, ensure it's here if this is the primary .series-post-content rule */
+    padding: 1.5em;
 }
-
-/* Added margin for category links within series posts */
-.series-post-content .gp-post-category.series-item-categories {
-    margin-bottom: 10px; /* Space above the title */
-    /* Flex properties like justify-content, align-items, gap for links are inherited from .gp-post-category */
-    /* Ensure links wrap and center if many categories */
-    justify-content: flex-start; /* Align category pills to the start */
-    gap: 4px; /* Smaller gap for category pills */
-}
-
-/* Adjust styling for category links within series items if needed, to make them smaller */
-.series-post-content .gp-post-category.series-item-categories a {
-    padding: 4px 10px; /* Smaller padding */
-    font-size: 0.8em;  /* Smaller font size */
-    min-height: auto;  /* Adjust min-height if necessary */
-}
-
 
 .series-post-title { 
     font-size: 1.05em; 
@@ -4501,13 +4488,6 @@ html.dark-mode-active .social-share-label {
 
 .series-post-content {
     padding: 1.5em;
-}
-
-/* Ensure the general .series-post-content padding is not overridden by mistake if it was part of the search block */
-.series-post-content {
-    display: flex;
-    flex-direction: column;
-    padding: 1.5em; /* Re-affirm if it was part of the search block */
 }
 
 .series-post-title {
