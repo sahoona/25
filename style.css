@@ -4452,7 +4452,7 @@ html.dark-mode-active .social-share-label {
     grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
     gap: 1.5em;
     justify-content: center;
-    max-width: 1000px;
+    max-width: 950px;
     margin: 0 auto;
 }
 
