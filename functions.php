@@ -564,28 +564,34 @@ function gp_language_switcher_output() {
             return;
         }
 
-        $current_lang_display = '';
-        $current_lang_slug_for_hreflang = ''; // Store original slug for hreflang
+        $current_lang_slug_for_hreflang = ''; // Store original slug for hreflang of the current page
         $other_lang_url = '';
         $other_lang_name_for_aria = ''; // For aria-label
+        $other_lang_display_text = ''; // Text to display on the button (e.g., "KR" or "EN")
+        $other_lang_slug_for_hreflang = ''; // Store original slug for hreflang of the target page
 
-        // First pass: Find current language details
+        // Determine current language's actual slug for hreflang meta tags if needed elsewhere,
+        // but for the switcher button, we primarily need details of the OTHER language.
         foreach ($translations as $lang) {
             if ($lang['current_lang']) {
-                $current_lang_slug_upper = strtoupper($lang['slug']);
-                $current_lang_display = ($current_lang_slug_upper === 'KO') ? 'KR' : $current_lang_slug_upper;
-                $current_lang_slug_for_hreflang = $lang['slug']; // Use original slug for hreflang
+                $current_lang_slug_for_hreflang = $lang['slug']; // Needed if we were generating hreflang tags for the current page
+                // We don't need to display current language on the button if we switch to showing target lang
                 break;
             }
         }
 
-        // Second pass: Find the 'other' language URL and name (assuming a two-language setup)
-        // If only one language is configured, this part won't find an 'other' language.
+        // Find the 'other' language details for the button itself
+        // This assumes a two-language setup primarily.
         if (count($translations) > 1) {
              foreach ($translations as $lang) {
                 if (!$lang['current_lang']) {
                     $other_lang_url = $lang['url'];
                     $other_lang_slug_upper = strtoupper($lang['slug']);
+                    $other_lang_slug_for_hreflang = $lang['slug']; // This is the hreflang for the link
+
+                    // Determine the display text for the button (target language)
+                    $other_lang_display_text = ($other_lang_slug_upper === 'KO') ? 'KR' : $other_lang_slug_upper;
+
                     // Determine the name of the language being switched TO for the aria-label
                     if ($other_lang_slug_upper === 'KO') $other_lang_name_for_aria = 'Korean';
                     elseif ($other_lang_slug_upper === 'EN') $other_lang_name_for_aria = 'English';
@@ -595,21 +601,18 @@ function gp_language_switcher_output() {
             }
         }
 
-        // If only one language is registered, display it as static text or hide switcher
-        if (empty($other_lang_url) && !empty($current_lang_display)) {
-             // Option 1: Display static current language (if desired)
-             // echo '<div class="gp-language-switcher static-language-display">';
-             // echo '<span class="language-static-text">' . esc_html($current_lang_display) . '</span>';
-             // echo '</div>';
-             // Option 2: Hide switcher if only one language (current behavior: return nothing if count < 1, so this is fine)
+        // If no "other" language is found (e.g., only one language configured, or error),
+        // then don't display the switcher.
+        if (empty($other_lang_url) || empty($other_lang_display_text)) {
              return;
         }
 
-        if ($current_lang_display && $other_lang_url) {
-            echo '<div class="gp-language-switcher single-toggle-button-style">'; // New class for styling
-            echo '<a href="' . esc_url($other_lang_url) . '" hreflang="' . esc_attr($current_lang_slug_for_hreflang) . '" id="gp-lang-toggle-breadcrumb" class="language-toggle-button" aria-label="Switch to ' . esc_attr($other_lang_name_for_aria) . '">' . esc_html($current_lang_display) . '</a>';
-            echo '</div>';
-        }
+        // Output the switcher button
+        // The button text now shows the language it will switch TO.
+        // The hreflang attribute correctly describes the language of the target URL.
+        echo '<div class="gp-language-switcher single-toggle-button-style">';
+        echo '<a href="' . esc_url($other_lang_url) . '" hreflang="' . esc_attr($other_lang_slug_for_hreflang) . '" id="gp-lang-toggle-breadcrumb" class="language-toggle-button" aria-label="Switch to ' . esc_attr($other_lang_name_for_aria) . '">' . esc_html($other_lang_display_text) . '</a>';
+        echo '</div>';
     }
 }
 
@@ -1253,8 +1256,16 @@ function gp_load_more_posts_ajax_handler() {
 
     // 5. If posts are found
     if ($query->have_posts()) {
-        ob_start();
+        $html_output = ''; // Initialize empty string to accumulate HTML
         while ($query->have_posts()) : $query->the_post();
+
+            // Capture breadcrumb HTML
+            ob_start();
+            gp_breadcrumb_output(); // Call the breadcrumb function
+            $breadcrumb_html = ob_get_clean();
+
+            // Capture the entire article HTML
+            ob_start();
             ?>
             <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                 <div class="inside-article">
@@ -1262,11 +1273,9 @@ function gp_load_more_posts_ajax_handler() {
                     // Start Entry Header
                     echo '<header class="entry-header">';
 
-                    // Category Links
-                    $categories_list = get_the_category_list(', ');
-                    if (!empty($categories_list)) {
-                        echo '<div class="gp-post-category">' . $categories_list . '</div>';
-                    }
+                    // Insert captured breadcrumb HTML
+                    // gp_breadcrumb_output() typically creates its own <div class="gp-post-category">
+                    echo $breadcrumb_html;
 
                     // Title
                     the_title(sprintf('<h2 class="entry-title" itemprop="headline"><a href="%s" rel="bookmark">', esc_url(get_permalink())), '</a></h2>');
@@ -1308,9 +1317,10 @@ function gp_load_more_posts_ajax_handler() {
                 </div><!-- .inside-article -->
             </article>
             <?php
+            $html_output .= ob_get_clean(); // Append this article's HTML to the total
         endwhile;
         wp_reset_postdata();
-        $html_output = ob_get_clean();
+
         error_log('GP Theme AJAX: HTML output length: ' . strlen($html_output));
         error_log('GP Theme AJAX: Sending success response with HTML.');
         wp_send_json_success(['html' => $html_output]);
