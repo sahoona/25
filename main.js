@@ -523,50 +523,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * Setup language toggle functionality for the new switcher structure
+     * Setup language toggle functionality for the new switcher structure (button + list)
      */
     function setupLanguageToggle() {
-        const switcherContainer = document.querySelector('.gp-language-switcher'); // Main container
-        if (!switcherContainer) return;
+        // Use the ID of the main switcher container for more specific targeting if needed,
+        // especially for the click-outside logic.
+        const switcherContainer = document.getElementById('gp-language-switcher');
+        if (!switcherContainer) {
+            // console.warn('Language switcher container #gp-language-switcher not found.');
+            return;
+        }
 
         const toggleButton = document.getElementById('gp-lang-switcher-button');
         const languageList = document.getElementById('gp-lang-switcher-list');
 
         if (!toggleButton || !languageList) {
-            console.warn('Language switcher button or list not found. Check IDs: gp-lang-switcher-button, gp-lang-switcher-list');
+            console.warn('Language switcher button (#gp-lang-switcher-button) or list (#gp-lang-switcher-list) not found.');
             return;
         }
 
         toggleButton.addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent the document click listener from immediately closing it
+            event.stopPropagation(); // Important: Prevents the document click listener from immediately closing the list.
+
             const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
 
             if (isExpanded) {
                 languageList.setAttribute('hidden', '');
                 toggleButton.setAttribute('aria-expanded', 'false');
-                switcherContainer.classList.remove('active'); // Optional: for styling the container
+                switcherContainer.classList.remove('active'); // For CSS styling based on active state
             } else {
                 languageList.removeAttribute('hidden');
                 toggleButton.setAttribute('aria-expanded', 'true');
-                switcherContainer.classList.add('active'); // Optional: for styling the container
+                switcherContainer.classList.add('active'); // For CSS styling based on active state
+                // Optional: Focus the first item in the list when opened
+                // const firstLink = languageList.querySelector('a.lang-link, span.lang-text');
+                // if (firstLink) firstLink.focus();
             }
         });
 
+        // Close the dropdown if a click occurs outside of the language switcher container
         document.addEventListener('click', function(event) {
-            // Close if the click is outside the switcher container
             if (!switcherContainer.contains(event.target)) {
-                languageList.setAttribute('hidden', '');
-                toggleButton.setAttribute('aria-expanded', 'false');
-                switcherContainer.classList.remove('active'); // Optional: for styling the container
+                if (toggleButton.getAttribute('aria-expanded') === 'true') {
+                    languageList.setAttribute('hidden', '');
+                    toggleButton.setAttribute('aria-expanded', 'false');
+                    switcherContainer.classList.remove('active');
+                }
             }
         });
 
-        // Optional: Keyboard navigation for accessibility (Escape key to close)
+        // Close the dropdown with the Escape key
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && toggleButton.getAttribute('aria-expanded') === 'true') {
-                languageList.setAttribute('hidden', '');
-                toggleButton.setAttribute('aria-expanded', 'false');
-                switcherContainer.classList.remove('active'); // Optional: for styling the container
+            if (event.key === 'Escape') {
+                if (toggleButton.getAttribute('aria-expanded') === 'true') {
+                    languageList.setAttribute('hidden', '');
+                    toggleButton.setAttribute('aria-expanded', 'false');
+                    switcherContainer.classList.remove('active');
+                    toggleButton.focus(); // Return focus to the button
+                }
             }
         });
     }

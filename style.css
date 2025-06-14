@@ -433,54 +433,53 @@ body.single .gp-top-meta-bar-container,
 
 body.single .gp-top-meta-bar,
 .single .gp-top-meta-bar {
-    display: grid !important;
-    grid-template-columns: auto 1fr auto !important; /* Three columns: left, center (flexible), right */
+    display: flex !important;
+    justify-content: space-between !important;
     align-items: center !important;
-    gap: 15px !important; /* Gap between grid items */
-    width: 100% !important; /* Ensure full width */
-    min-height: 42px;
+    width: 100% !important;
+    min-height: 42px; /* Or original height */
     position: relative !important;
-    padding: 0 15px !important; /* Padding for the bar itself */
-    box-sizing: border-box !important; /* Include padding in width calculation */
+    padding: 0 15px !important; /* Keep padding if it was there before grid */
+    box-sizing: border-box !important;
+    gap: 0; /* Remove grid gap, flex gap might be different or not used */
 }
 
 /*
-   The .breadcrumb-lang-wrapper is NOT a direct child grid container of .gp-top-meta-bar on single posts.
-   Its children, .gp-post-category and .gp-language-switcher, are the direct grid items of .gp-top-meta-bar.
-   Thus, the 'display: contents' rule for '.body.single .breadcrumb-lang-wrapper' is removed as it's not relevant here.
-   The general styling for .breadcrumb-lang-wrapper (around line 1268) will apply if it's used in other contexts.
+   Reverted .breadcrumb-lang-wrapper to its previous state if it was modified,
+   or ensure it doesn't interfere with flex layout.
+   If .gp-post-category and .gp-language-switcher are direct children of .gp-top-meta-bar,
+   .breadcrumb-lang-wrapper might not be needed or might be styled differently.
+   Assuming it's not a primary layout container for this specific flex setup.
 */
 
-
 body.single .gp-top-meta-bar .left-buttons {
-    justify-self: start !important; /* Align to the start of the first column */
-    grid-column: 1; /* Explicitly assign to first column */
+    /* Flex items align left by default, no specific justify-self or grid-column needed */
+    /* Ensure no grid properties are present */
 }
 
 body.single .gp-top-meta-bar .gp-post-category, /* Targets the breadcrumb container */
 .single .gp-top-meta-bar .gp-post-category {
-    grid-column: 2; /* Assign to the second, flexible column */
-    justify-self: center !important; /* Center the breadcrumb block within the 1fr column */
-    position: static !important;
-    transform: none !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important; /* Added for completeness */
-    bottom: auto !important; /* Added for completeness */
-    display: flex !important; /* Internal alignment of breadcrumb links */
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: auto !important; /* Or a specific max-width if defined previously */
+    margin: 0 !important; /* Reset margin */
+    /* display: flex etc. from previous rules for internal alignment are likely still fine */
+    /* Remove grid-item specific properties */
+    display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     text-align: center !important;
-    margin: 0 !important;
-    width: 100% !important; /* Let it fill the cell, text-align/justify-content will center content */
-    flex-wrap: wrap !important; /* Existing, good for wrapping links */
-    gap: 5px !important; /* Existing */
-    flex-direction: row !important; /* Existing */
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    flex-direction: row !important;
 }
 
 body.single .gp-top-meta-bar .gp-language-switcher { /* Targets the language switcher's main container */
-    grid-column: 3; /* Assign to the third column */
-    justify-self: end !important; /* Align to the end of the third column */
+    /* Flex items align right due to space-between on parent, no specific justify-self or grid-column needed */
+    /* Ensure no grid properties are present */
+    margin-left: auto; /* Common way to push to the right in flex if not using space-between effectively for all items */
 }
 .entry-title { background-color: transparent !important; padding: 20px 25px !important; border-radius: 15px !important; font-size: 1.8em !important; font-weight: 600 !important; text-align: center; width: auto; }
 .entry-title a {
@@ -772,100 +771,102 @@ footer.tags-footer .tags-links {
 /* ==========================================================================
    10. Language Switcher (Multilingual SEO)
    ========================================================================== */
-/* Styles for the NEW language switcher dropdown. */
-.gp-language-switcher {
-    position: relative; /* For dropdown positioning */
-    display: inline-block; /* Adjust as needed for layout within breadcrumb bar */
-    margin-left: auto; /* Align to the right if in a flex container */
-    align-self: center;
+/* Styles for the NEW button-based language switcher dropdown. */
+
+.gp-language-switcher { /* ID: #gp-language-switcher */
+    position: relative;
+    display: inline-block;
+    /* margin-left: auto; /* Removed, rely on grid placement in .gp-top-meta-bar */
+    align-self: center; /* Vertically center if in a flex container */
 }
 
-button#gp-lang-switcher-button,
-.gp-language-button { /* Fallback class if ID is not specific enough */
-    font-size: 0.9em;
-    font-weight: 600;
+button#gp-lang-switcher-button, /* Specific ID for the button */
+.gp-language-button { /* General class for styling if ID is too specific */
+    font-family: inherit; /* Inherit from body */
+    font-size: 0.85em; /* Slightly smaller for compactness */
+    font-weight: 500;
     color: var(--text-secondary);
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-secondary);
-    padding: 8px 12px; /* Slightly more padding for button feel */
-    border-radius: 15px;
+    padding: 7px 10px; /* Adjusted padding */
+    border-radius: 12px; /* Consistent with other small buttons */
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 45px; /* Min width for KR/EN etc. */
-    line-height: 1;
+    min-width: 40px;
+    line-height: 1.2;
 }
 
 button#gp-lang-switcher-button:hover,
 .gp-language-button:hover,
-.gp-language-switcher.active button#gp-lang-switcher-button, /* Style when dropdown is open */
+.gp-language-switcher.active button#gp-lang-switcher-button,
 .gp-language-switcher.active .gp-language-button {
     background-color: var(--accent-color);
     color: var(--white-color);
     border-color: var(--accent-color);
-    transform: scale(1.03); /* Subtle lift */
+    transform: translateY(-1px); /* Subtle lift */
 }
 
 button#gp-lang-switcher-button .dropdown-icon {
     display: inline-block;
-    width: 12px; /* Adjust size as needed */
-    height: 12px; /* Adjust size as needed */
-    background-color: currentColor; /* Will take the color of the button text */
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    width: 1em; /* Relative to font size */
+    height: 1em; /* Relative to font size */
+    background-color: currentColor; /* Icon color matches button text color */
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4.5 6.5l3.5 3 3.5-3' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
-    margin-left: 8px; /* Space between button text and icon */
+    margin-left: 6px; /* Space between button text (e.g., KR) and icon */
     transition: transform 0.25s ease-in-out;
-    vertical-align: middle; /* Align with text if button text wraps or has different line-height */
+    vertical-align: text-bottom; /* Better alignment with text */
 }
 
 .gp-language-switcher.active button#gp-lang-switcher-button .dropdown-icon {
     transform: rotate(180deg);
 }
 
-ul#gp-lang-switcher-list,
-.language-list { /* Fallback class */
-    display: none; /* Hidden by default, JS uses `hidden` attribute but this is a fallback */
+ul#gp-lang-switcher-list, /* Specific ID for the list */
+.language-list { /* General class for styling */
+    /* display: none; This is handled by the [hidden] attribute via JS */
     position: absolute;
-    top: calc(100% + 5px); /* Below the button with a small gap */
-    right: 0; /* Align to the right of the container */
+    top: calc(100% + 6px); /* Position below the button with a small gap */
+    right: 0; /* Align to the right edge of the .gp-language-switcher container */
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-primary);
-    border-radius: 8px; /* Softer radius for dropdown */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    z-index: 1000; /* Ensure it's above other content */
-    min-width: 120px; /* Minimum width for the dropdown */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Softer shadow */
+    z-index: 1001; /* Ensure it's above other content, like breadcrumbs or nearby elements */
+    min-width: 100px; /* Minimum width, can expand based on content */
     list-style: none;
-    padding: 5px; /* Inner padding for the list items */
+    padding: 6px; /* Inner padding for the list items */
     margin: 0;
+    overflow: hidden; /* Ensures items with border-radius look good */
 }
 
-.gp-language-switcher.active ul#gp-lang-switcher-list,
-.gp-language-switcher.active .language-list,
-ul#gp-lang-switcher-list:not([hidden]), /* When JS removes hidden attr */
-.language-list:not([hidden]) {
-    display: block;
+/* Styling for when the list is shown by JS (removing 'hidden' attribute) */
+ul#gp-lang-switcher-list:not([hidden]) {
+    display: block; /* Or flex if items need flex properties */
 }
 
 ul#gp-lang-switcher-list li.lang-item {
-    margin: 0;
+    margin: 0; /* Reset margin for list items */
 }
 
 ul#gp-lang-switcher-list li a.lang-link,
 ul#gp-lang-switcher-list li span.lang-text {
-    display: block;
-    padding: 8px 12px;
-    font-size: 0.9em;
+    display: block; /* Make them block elements to fill the li */
+    padding: 8px 10px; /* Padding for each item */
+    font-size: 0.85em;
     font-weight: 500;
     color: var(--text-primary);
     text-decoration: none;
-    border-radius: 6px; /* Slight radius for items */
-    transition: background-color 0.2s ease, color 0.2s ease;
-    white-space: nowrap;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+    text-align: left; /* Ensure text is left-aligned */
 }
 
 ul#gp-lang-switcher-list li a.lang-link:hover,
@@ -875,16 +876,17 @@ ul#gp-lang-switcher-list li a.lang-link:focus {
 }
 
 ul#gp-lang-switcher-list li.current-lang span.lang-text {
-    color: var(--text-muted); /* Different color for current language */
-    font-weight: 600; /* Make it bolder */
-    cursor: default;
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: default; /* Indicate it's not clickable */
+    background-color: var(--bg-tertiary); /* Visually distinct background */
 }
 
-/* Dark Mode for New Language Switcher */
+/* Dark Mode Styles for the New Language Switcher */
 html.dark-mode-active .gp-language-switcher button#gp-lang-switcher-button,
 html.dark-mode-active .gp-language-switcher .gp-language-button {
     color: var(--text-secondary);
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-primary); /* Darker button background */
     border-color: var(--border-secondary);
 }
 
@@ -893,31 +895,32 @@ html.dark-mode-active .gp-language-switcher .gp-language-button:hover,
 html.dark-mode-active .gp-language-switcher.active button#gp-lang-switcher-button,
 html.dark-mode-active .gp-language-switcher.active .gp-language-button {
     background-color: var(--accent-color);
-    color: var(--white-color); /* Ensure text is white on accent bg */
+    color: var(--bg-primary); /* Dark text on accent for contrast */
     border-color: var(--accent-color);
 }
 
 html.dark-mode-active ul#gp-lang-switcher-list,
 html.dark-mode-active .language-list {
-    background-color: var(--bg-secondary);
+    background-color: var(--bg-secondary); /* Darker dropdown background */
     border-color: var(--border-primary);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Darker shadow */
 }
 
 html.dark-mode-active ul#gp-lang-switcher-list li a.lang-link,
 html.dark-mode-active ul#gp-lang-switcher-list li span.lang-text {
-    color: var(--text-primary);
+    color: var(--text-primary); /* Light text for items */
 }
 
 html.dark-mode-active ul#gp-lang-switcher-list li a.lang-link:hover,
 html.dark-mode-active ul#gp-lang-switcher-list li a.lang-link:focus {
-    background-color: var(--bg-tertiary); /* Darker hover for items */
+    background-color: var(--bg-tertiary);
     color: var(--accent-color);
 }
 
 html.dark-mode-active ul#gp-lang-switcher-list li.current-lang span.lang-text {
-    color: var(--text-muted); /* Muted text for current lang in dark mode */
+    color: var(--text-muted);
+    background-color: var(--bg-primary); /* Slightly different background for current item */
 }
-
 
 /* ==========================================================================
    12. Post Navigation (Custom)
@@ -1943,6 +1946,12 @@ html.dark-mode-active-loading body {
     margin: 0 0 20px 0 !important;
     padding: 0 !important;
 }
+
+/* Adjust vertical position for single posts to be slightly higher */
+body.single .gp-top-meta-bar-container {
+    margin: -10px 0 15px 0 !important; /* -10px top, 0 right, 15px bottom, 0 left */
+}
+
 .gp-top-meta-bar {
     display: flex !important;
     justify-content: flex-start !important; /* Changed from space-between */
